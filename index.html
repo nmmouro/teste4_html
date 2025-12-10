@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Painel TV - Frota</title>
 
-  <!-- Força atualização no GitHub Pages -->
+  <!-- Anti-cache para GitHub Pages -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -115,6 +115,7 @@
 </div>
 
 <script>
+  /**************** CONFIG ********************/
   const SHEET_ID = "1Ch3AjQ0MDo4WuQWFDR3r8nZrHb4yQkSLOtT5_QgxT6E";
 
   const abas = {
@@ -123,28 +124,102 @@
     agendaSocial: "AGENDA SERVIÇO SOCIAL"
   };
 
+  /************** RELÓGIO BR *******************/
   function atualizarRelogio() {
     const r = document.getElementById("relogio");
     const agora = new Date();
-    r.innerHTML = agora.toLocaleDateString("pt-BR") + "<br>" +
-                  agora.toLocaleTimeString("pt-BR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                  });
+    const data = agora.toLocaleDateString("pt-BR");
+    const hora = agora.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+    r.innerHTML = data + "<br>" + hora;
   }
   setInterval(atualizarRelogio, 1000);
   atualizarRelogio();
 
+  /************** URL **************************/
   function url(sheet) {
     return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheet)}&nocache=${Date.now()}`;
   }
 
+  /************** HELPERS **********************/
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;');
+  }
+
+  function formatCell(value) {
+    if (value === null || value === undefined) return "";
+
+    if (value instanceof Date && !isNaN(value)) {
+      return value.toLocaleDateString('pt-BR');
+    }
+
+    if (typeof value === 'number') return String(value);
+
+    if (typeof value === 'string') {
+      const s = value.trim();
+
+      // Date(YYYY,MM,DD[,HH,MM,SS])
+      const dateMatch = s.match(/^Date\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+))?/);
+      if (dateMatch) {
+        const ano = Number(dateMatch[1]);
+        const mes = Number(dateMatch[2]) + 1;
+        const dia = Number(dateMatch[3]);
+
+        if (dateMatch[4] !== undefined) {
+          const hh = String(dateMatch[4]).padStart(2,'0');
+          const mm = String(dateMatch[5] ?? 0).padStart(2,'0');
+          const ss = String(dateMatch[6] ?? 0).padStart(2,'0');
+          return `${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${ano} ${hh}:${mm}:${ss}`;
+        }
+        return `${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${ano}`;
+      }
+
+      // TimeOfDay(H,M,S)
+      const timeMatch = s.match(/^TimeOfDay\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+      if (timeMatch) {
+        const hh = String(timeMatch[1]).padStart(2,'0');
+        const mm = String(timeMatch[2]).padStart(2,'0');
+        const ss = String(timeMatch[3]).padStart(2,'0');
+        return `${hh}:${mm}:${ss}`;
+      }
+
+      // ISO date: YYYY-MM-DD or datetime
+      const isoDateMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2}):?(\d{2})?)?/);
+      if (isoDateMatch) {
+        const ano = isoDateMatch[1];
+        const mes = isoDateMatch[2];
+        const dia = isoDateMatch[3];
+        if (isoDateMatch[4] !== undefined) {
+          const hh = String(isoDateMatch[4]).padStart(2,'0');
+          const mm = String(isoDateMatch[5] ?? '00').padStart(2,'0');
+          const ss = String(isoDateMatch[6] ?? '00').padStart(2,'0');
+          return `${dia}/${mes}/${ano} ${hh}:${mm}:${ss}`;
+        }
+        return `${dia}/${mes}/${ano}`;
+      }
+
+      return s;
+    }
+
+    if (typeof value === 'object') {
+      if ('v' in value) return formatCell(value.v);
+      if ('f' in value) return formatCell(value.f);
+      try { return JSON.stringify(value); } catch(e) { return String(value); }
+    }
+
+    return String(value);
+  }
+
+  /************** CARREGAMENTO *****************/
   async function carregar(sheet, divId) {
     try {
-      const res = await fetch(url(sheet), {
-        cache: "reload"
-      });
+      const res = await fetch(url(sheet), { cache: "reload" });
       const txt = await res.text();
 
       const json = JSON.parse(
@@ -156,122 +231,45 @@
         (r.c || []).map(c => (c ? c.v : ""))
       );
 
-      renderTabela(divId, cols, rows, sheet);
+      renderTabela(divId, cols, rows);
     } catch (e) {
       document.getElementById(divId).innerHTML = "Erro ao carregar dados";
       console.error(sheet, e);
     }
   }
 
+  /************** RENDER ***********************/
   function renderTabela(divId, cols, rows) {
     const div = document.getElementById(divId);
 
     let html = "<table><thead><tr>";
-    cols.forEach(c => html += `<th>${c}</th>`);
+    cols.forEach(c => html += `<th>${escapeHtml(c)}</th>`);
     html += "</tr></thead><tbody>";
 
     rows.forEach(r => {
       let classe = "";
+      const statusBruto = r[r.length - 1] ?? "";
+      const status = String(statusBruto).toLowerCase();
 
-      const status = (r[r.length - 1] || "").toLowerCase();
       if (status.includes("andamento")) classe = "status-andamento";
       if (status.includes("concluído") || status.includes("concluido"))
         classe = "status-concluido";
 
       html += `<tr class="${classe}">`;
 
-      
-           
-     // helper: escape HTML
-function escapeHtml(str){
-  return String(str ?? "").replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+      r.forEach(cellValue => {
+        const valor = escapeHtml(formatCell(cellValue));
+        html += `<td>${valor}</td>`;
+      });
 
-// formata valores vindos do gviz para formatos amigáveis BR
-function formatCell(value) {
-  if (value === null || value === undefined) return "";
+      html += "</tr>";
+    });
 
-  // já é um Date object (pouco provável no gviz, mas seguro)
-  if (value instanceof Date && !isNaN(value)) {
-    return value.toLocaleDateString('pt-BR');
-  }
-
-  // se for número (por ex. timestamp), mostrar como está
-  if (typeof value === 'number') return String(value);
-
-  // se for string, tratar vários formatos
-  if (typeof value === 'string') {
-    const s = value.trim();
-
-    // 1) Date(YYYY,MM,DD,HH,MM,SS...) — extrai números
-    const dateMatch = s.match(/^Date\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+))?/);
-    if (dateMatch) {
-      const ano = Number(dateMatch[1]);
-      const mes = Number(dateMatch[2]) + 1; // months are 0-based in Date(...)
-      const dia = Number(dateMatch[3]);
-      // se veio hora
-      if (dateMatch[4] !== undefined) {
-        const hh = String(dateMatch[4]).padStart(2,'0');
-        const mm = String(dateMatch[5] ?? 0).padStart(2,'0');
-        const ss = String(dateMatch[6] ?? 0).padStart(2,'0');
-        return `${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${ano} ${hh}:${mm}:${ss}`;
-      }
-      return `${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${ano}`;
-    }
-
-    // 2) TimeOfDay(H, M, S) -> converte para HH:MM:SS
-    const timeMatch = s.match(/^TimeOfDay\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
-    if (timeMatch) {
-      const hh = String(timeMatch[1]).padStart(2,'0');
-      const mm = String(timeMatch[2]).padStart(2,'0');
-      const ss = String(timeMatch[3]).padStart(2,'0');
-      return `${hh}:${mm}:${ss}`;
-    }
-
-    // 3) ISO date yyyy-mm-dd or datetime
-    const isoDateMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2}):?(\d{2})?)?/);
-    if (isoDateMatch) {
-      const ano = isoDateMatch[1];
-      const mes = isoDateMatch[2];
-      const dia = isoDateMatch[3];
-      if (isoDateMatch[4] !== undefined) {
-        const hh = String(isoDateMatch[4]).padStart(2,'0');
-        const mm = String(isoDateMatch[5] ?? '00').padStart(2,'0');
-        const ss = String(isoDateMatch[6] ?? '00').padStart(2,'0');
-        return `${dia}/${mes}/${ano} ${hh}:${mm}:${ss}`;
-      }
-      return `${dia}/${mes}/${ano}`;
-    }
-
-    // 4) se for string normal, retornar como está (trim)
-    return s;
-  }
-
-  // 5) caso seja objeto (por ex. gviz pode retornar objetos complexos)
-  if (typeof value === 'object') {
-    // tente extrair field 'v' ou 'f' se existir
-    if ('v' in value) return formatCell(value.v);
-    if ('f' in value) return formatCell(value.f);
-    // fallback: stringify
-    try { return JSON.stringify(value); } catch(e) { return String(value); }
-  }
-
-  // fallback geral
-  return String(value);
-}
-
-
-    
- r.forEach(cellValue => {
-  const valorFormatado = escapeHtml(formatCell(cellValue));
-  html += `<td>${valorFormatado}</td>`;
-});
-
-
-
+    html += "</tbody></table>";
     div.innerHTML = html;
   }
 
+  /************** AUTO REFRESH *****************/
   function atualizarTudo() {
     carregar(abas.painel, "painel");
     carregar(abas.agendaDia, "agendaDia");
@@ -280,6 +278,7 @@ function formatCell(value) {
 
   atualizarTudo();
   setInterval(atualizarTudo, 60000); // 1 minuto
+
 </script>
 
 </body>
