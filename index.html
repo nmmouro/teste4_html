@@ -197,7 +197,7 @@ function renderTabela(divId, sheetName) {
         const status = String(r[r.length - 1] || "").toLowerCase();
         if (status.includes("andamento")) classe = "status-andamento";
         if (status.includes("concluido") || status.includes("concluido")) classe = "status-concluido";
-        if (status.includes("cancelado")) classe = "status-cancelado";
+        if (status.includes("cancelado") || status.includes("cancelado")) classe = "status-cancelado";
 
         
         html += `<tr class="${classe}">`;
