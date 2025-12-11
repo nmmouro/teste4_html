@@ -201,9 +201,6 @@ function renderTabela(divId, sheetName) {
         if (status.includes("concluido") || status.includes("concluido")) classe = "status-concluido";
         
 
-        let classe = "";
-const status = String(r[r.length - 1] || "").toLowerCase();
-
 // ✅ aplicar apenas nas abas de agenda
   if (sheetName === "AGENDA DO DIA" || sheetName === "AGENDA SERVIÇO SOCIAL") {
   if (status.includes("cancelado")) classe = "status-cancelado";
