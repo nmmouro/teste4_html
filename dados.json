@@ -1,0 +1,33 @@
+/* ======================================================
+   CARREGA OS DADOS REAIS DA PLANILHA VIA JSON
+====================================================== */
+async function carregar() {
+  const titulo = document.getElementById("titulo");
+  titulo.innerText = "Carregando dados da planilha...";
+
+  try {
+    // 🔥 ALTERE AQUI O NOME DO SEU ARQUIVO JSON 🔥
+    const url = "1Ch3AjQ0MDo4WuQWFDR3r8nZrHb4yQkSLOtT5_QgxT6E";  // exemplo: "tabelas.json", "api.json", etc.
+
+    const resposta = await fetch(url);
+
+    if (!resposta.ok) {
+      throw new Error("Erro ao carregar o arquivo JSON: " + resposta.status);
+    }
+
+    const planilhas = await resposta.json();
+
+    titulo.innerText = "Visualização da Planilha";
+
+    // percorre todas as abas encontradas
+    Object.keys(planilhas).forEach(sheetName => {
+      renderSheet(sheetName, planilhas[sheetName]);
+    });
+
+  } catch (erro) {
+    titulo.innerText = "Erro ao carregar dados";
+    console.error("Erro ao carregar JSON:", erro);
+    document.getElementById("conteudo").innerHTML =
+      "<p style='color:red;'>Não foi possível carregar o arquivo JSON.</p>";
+  }
+}
