@@ -15,28 +15,94 @@
     --bg:#071029; --card:#2a71e8; --muted:#f7f9fa;
     --accent:#00eaff; --danger:#9b1111;
   }
-  html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}
-  header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#020617;border-bottom:1px solid rgba(255,255,255,0.03)}
-  header img{height:66px}
-  header .title{font-size:20px;font-weight:700;color:var(--accent)}
-  header .clock{font-size:20px;color:var(--muted)}
-  main{padding:12px;display:grid;grid-template-rows:1fr 1fr 1fr;gap:12px;height:calc(100vh - 92px);box-sizing:border-box}
-  .card{background:var(--card);border-radius:10px;padding:12px;overflow:auto}
-  .card h2{margin:0 0 8px;color:var(--accent);font-size:18px;text-align:center}
-  table{width:100%;border-collapse:collapse;font-size:14px}
-  thead th{position:sticky;top:0;background:rgba(255,255,255,0.02);padding:8px;text-align:left;font-weight:700}
-  td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  tr.status-andamento{background: rgba(219,147,112,0.18)}
-
-  tr.status-atendido{background: rgba(147,219,112,0.18)}
+  html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    color:#fff;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+  }
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 20px;
+    background:#020617;
+    border-bottom:1px solid rgba(255,255,255,0.03);
+  }
+  header img{
+    height:66px;
+  }
+  header .title{
+    font-size:20px;
+    font-weight:700;
+    color:var(--accent);
+  }
+  header .clock{
+    font-size:20px;
+    color:var(--muted);
+  }
+  main{
+    padding:12px;
+    display:grid;
+    grid-template-rows:1fr 1fr 1fr;
+    gap:12px;
+    height:calc(100vh - 92px);
+    box-sizing:border-box;
+  }
+  .card{
+    background:var(--card);
+    border-radius:10px;
+    padding:12px;
+    overflow:auto;
+  }
+  .card h2{
+    margin:0 0 8px;
+    color:var(--accent);
+    font-size:18px;
+    text-align:center;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+  }
+  thead th{
+    position:sticky;
+    top:0;
+    background:rgba(255,255,255,0.02);
+    padding:8px;
+    text-align:left;
+    font-weight:700;
+  }
+  td{
+    padding:8px;
+    border-bottom:1px solid rgba(255,255,255,0.03);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
   
+  tr.status-andamento{background: rgba(219,147,112,0.18)}
+  tr.status-atendido{background: rgba(147,219,112,0.18)}
   tr.status-concluido{background: rgba(0,200,120,0.06)}
+  
   @keyframes piscarCancelado {0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
   tr.status-cancelado{background: rgba(155,17,17,0.18);text-decoration:line-through;animation:piscarCancelado 3s infinite}
-  .small{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
+  
+  .small{
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:6px;
+  }
+  
   /* responsivo: se altura pequena, reduzir fonte */
   @media (max-height:700px){
-    td,thead th{padding:6px;font-size:12px}
+    td,thead th{
+      padding:6px;
+      font-size:12px;
+    }
   }
 
   /* Cabeçalho azul padrão
