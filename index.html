@@ -20,12 +20,8 @@
   --text:#f7f9fa;
   --muted:#9fb3ff;
 }
-  
 
-
-  
-
-/* ========== HTML ========== */
+  /* ========== HTML ========== */
   
 html,body{
   height:100%;
@@ -109,9 +105,6 @@ header{
 header{
   height:90px;
 }
-
-  
-
 
 main{
   padding:12px;
@@ -203,6 +196,7 @@ td.status-icon{
 }
 
 /* ================= PAINEL ================= */
+
 #painel table th:nth-child(1),
 #painel table td:nth-child(1),
 #painel table th:nth-child(2),
@@ -221,7 +215,8 @@ td.status-icon{
   width: 80px;
 }
 
-  /* ================= AGAENDA DO DIA ================= */
+ /* ================= AGAENDA DO DIA ================= */
+
 #agenda table th:nth-child(1),
 #agenda table td:nth-child(1),
 #agenda table th:nth-child(2),
@@ -236,7 +231,8 @@ td.status-icon{
   width: 80px;
 }
 
-    /* ================= AGAENDA S SOCIAL ================= */
+ /* ================= AGAENDA S SOCIAL ================= */
+
 #social table th:nth-child(1),
 #social table td:nth-child(1),
 #social table th:nth-child(2),
@@ -255,7 +251,8 @@ td.status-icon{
 }
 
 
-  /* ================= CORES DE STATUS ================= */
+ /* ================= CORES DE STATUS ================= */
+
 tr.status-atendido   td.status-icon{color:#00ff9c;}
 tr.status-andamento  td.status-icon{color:#ffcc00;}
 tr.status-concluido  td.status-icon{color:#7CFC00;}
@@ -276,7 +273,6 @@ tr.status-concluido td{
 tr.status-cancelado td{
   background:rgba(255, 77, 77, 0.15);
 }
-
 
 .small{
   text-align:center;
@@ -306,7 +302,6 @@ tr.status-cancelado td{
   </div>
 </header>
   
-
 <main>
   <section class="card">
     <h2>PAINEL</h2>
@@ -327,9 +322,8 @@ tr.status-cancelado td{
 <div class="small">Atualização automática a cada 30s • Google Sheets</div>
 
 
-
-
 <script>
+  
 /* ================= CONFIG ================= */
 const SHEET_ID = "1Ch3AjQ0MDo4WuQWFDR3r8nZrHb4yQkSLOtT5_QgxT6E";
 const TABS = [
@@ -559,7 +553,6 @@ function atualizarStatusEmpregados(gvizPainel){
   el.innerHTML = html;
 }
   
-
 loadAll();
 updateSoundButton();
 setInterval(loadAll, 10000);
