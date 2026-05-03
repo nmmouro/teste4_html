@@ -9,6 +9,10 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#071029">
+  
+
 <style>
 :root{
   --bg:#071029;        /* fundo geral */
@@ -607,4 +611,11 @@ function atualizarStatusEmpregados(gvizPainel){
 loadAll();
 updateSoundButton();
 setInterval(loadAll, 10000);
+
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js")
+    .then(()=>console.log("✅ PWA ativa"))
+    .catch(err=>console.log("Erro SW:", err));
+}
+  
 </script>
