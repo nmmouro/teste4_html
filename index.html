@@ -239,6 +239,8 @@ tr.status-cancelado td{
     <div class="title">MOVIMENTAÇÃO DIÁRIA</div>
     <div id="status-empregados" style="font-size:16px;margin-top:4px;"></div>
   </div>
+  <!-- 🔊 BOTÃO CENTRAL -->
+  <button id="toggle-audio" onclick="toggleAudio()">🔊 SOM: ON</button>
   <div class="clock" id="clock"></div>
 </header>
 
@@ -285,26 +287,53 @@ let audioUnlocked = false;
 let lastDataHash = null;
 let firstLoad = true;
 
-function playBeep(){
-  const a = document.getElementById("beep");
-  if(!a || !audioUnlocked) return;
-  a.currentTime = 0;
-  a.play().catch(()=>{});
+  /* 🔊 estado salvo */
+let soundEnabled = localStorage.getItem("sound") !== "off";
+
+function updateSoundButton(){
+  const btn = document.getElementById("toggle-audio");
+  if(!btn) return;
+
+  if(soundEnabled){
+    btn.innerText = "🔊 SOM: ON";
+    btn.classList.remove("off");
+  }else{
+    btn.innerText = "🔇 SOM: OFF";
+    btn.classList.add("off");
+  }
 }
 
-/* 🔓 desbloqueio por clique */
-document.addEventListener("click", () => {
-  const a = document.getElementById("beep");
-  if(!a || audioUnlocked) return;
+  function toggleAudio(){
+  soundEnabled = !soundEnabled;
+  localStorage.setItem("sound", soundEnabled ? "on" : "off");
+  updateSoundButton();
+}
 
-  a.volume = 0.8;
+  document.addEventListener("pointerdown", unlockAudio, { once:true });
+document.addEventListener("keydown", unlockAudio, { once:true });
+
+function unlockAudio(){
+  const a = document.getElementById("beep");
+  if(!a) return;
+
+  a.volume = 0.6;
+
   a.play().then(()=>{
     a.pause();
     a.currentTime = 0;
     audioUnlocked = true;
     console.log("🔊 áudio liberado");
-  }).catch(()=>{});
-},{ once:true });
+  }).catch(err=>{
+    console.log("Erro ao liberar áudio:", err);
+  });
+}
+  function playBeep(){
+  const a = document.getElementById("beep");
+  if(!a || !audioUnlocked || !soundEnabled) return;
+
+  a.currentTime = 0;
+  a.play().catch(()=>{});
+}
 
 /* ================= RELÓGIO ================= */
 function updateClock(){
