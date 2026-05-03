@@ -1,20 +1,41 @@
-const CACHE_NAME = "painel-frota-v2";
+const CACHE_NAME = "painel-frota-v1";
 
+const urlsToCache = [
+  "./",
+  "./index.html",
+  "./logo.png",
+  "./alerta.mp3"
+];
+
+// instalar
 self.addEventListener("install", event => {
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
+  );
 });
 
+// ativar
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => caches.delete(k)))
-    )
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if(key !== CACHE_NAME){
+            return caches.delete(key);
+          }
+        })
+      );
+    })
   );
-  self.clients.claim();
 });
 
+// fetch
 self.addEventListener("fetch", event => {
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
   );
 });
