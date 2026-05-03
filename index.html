@@ -250,6 +250,21 @@ td.status-icon{
   width: 80px;
 }
 
+/* ================= Instalaçao app ================= */
+#install-app{
+  background:#0b1a3a;
+  color:#fff;
+  border:1px solid #fff;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+#install-app:hover{
+  background:#1a2d5c;
+}  
+
 
  /* ================= CORES DE STATUS ================= */
 
@@ -299,6 +314,7 @@ tr.status-cancelado td{
   <div class="right">
     <div class="clock" id="clock"></div>
     <button id="toggle-audio" onclick="toggleAudio()">🔊 SOM: ON</button>
+    <button id="install-app" style="display:none;">📲 INSTALAR APP</button>
   </div>
 </header>
   
@@ -323,6 +339,41 @@ tr.status-cancelado td{
 
 
 <script>
+
+  /* ================= App ================= */
+  let deferredPrompt;
+const installBtn = document.getElementById("install-app");
+
+/* captura evento de instalação */
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  installBtn.style.display = "inline-block";
+});
+
+/* clique no botão */
+installBtn.addEventListener("click", async () => {
+  if(!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if(outcome === "accepted"){
+    console.log("✅ App instalado");
+  }else{
+    console.log("❌ Instalação cancelada");
+  }
+
+  deferredPrompt = null;
+  installBtn.style.display = "none";
+});
+
+  window.addEventListener("appinstalled", () => {
+  console.log("📲 App já instalado");
+  installBtn.style.display = "none";
+});
   
 /* ================= CONFIG ================= */
 const SHEET_ID = "1Ch3AjQ0MDo4WuQWFDR3r8nZrHb4yQkSLOtT5_QgxT6E";
