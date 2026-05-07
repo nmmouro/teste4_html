@@ -9,6 +9,9 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
   <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#071029">
   
@@ -224,7 +227,7 @@ td.status-icon{
   width: 65px;
 }
 
- /* ================= AGAENDA DO DIA ================= */
+ /* ================= AGENDA DO DIA ================= */
 
 #agenda table th:nth-child(1),
 #agenda table td:nth-child(1){
@@ -462,7 +465,7 @@ function updateClock(){
     n.toLocaleDateString("pt-BR")+" — "+
     n.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
-setInterval(updateClock,1000);
+setInterval(updateClock,30000);
 updateClock();
 
 /* ================= HELPERS ================= */
@@ -523,17 +526,13 @@ function renderTable(id, g){
 
   h+=`<tr class="${cls}">`;
 
-    cells.forEach((c,i)=>{
-      if(i === cells.length-1){
-        let icon="";
-        if(status.includes("concluido")||status.includes("atendido")) icon="✔";
-        if(status.includes("cancelado")) icon="✖";
-        else if(status.includes("andamento")) icon="⏳";
-        h+=`<td class="status-icon">${icon}</td>`;
-      }else{
-        h+=`<td>${escapeHtml(formatCell(c))}</td>`;
-      }
-    });
+   const empregado = String(cells[3]?.f ?? cells[3]?.v ?? "").toUpperCase();
+
+nomes.forEach(nome=>{
+  if(empregado.includes(nome)){
+    status[nome] = true;
+  }
+});
 
     h+="</tr>";
   });
@@ -543,24 +542,20 @@ function renderTable(id, g){
 }
 
 /* ================= FETCH ================= */
-async function fetchSheet(tab){
-  const url =
-    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq`+
-    `?sheet=${encodeURIComponent(tab)}&tqx=out:json&nocache=${Date.now()}`;
-
-  const r = await fetch(url,{cache:"no-store"});
-  return parseGviz(await r.text());
-}
-
-/* ================= LOAD ================= */
 async function loadAll(){
   try{
-    const results = await Promise.all(TABS.map(t=>fetchSheet(t.name)));
+    const results = await Promise.all(
+      TABS.map(t => fetchSheet(t.name))
+    );
 
     const currentHash = generateCleanHash(results);
 
-    if(!firstLoad && lastDataHash && currentHash !== lastDataHash){
-      playBeep(); // 🔊 SOM SÓ SE DADOS MUDAREM
+    if(
+      !firstLoad &&
+      lastDataHash &&
+      currentHash !== lastDataHash
+    ){
+      playBeep();
     }
 
     firstLoad = false;
@@ -570,13 +565,17 @@ async function loadAll(){
     renderTable("agenda", results[1]);
     renderTable("social", results[2]);
 
-// ✅ NOVO
-atualizarStatusEmpregados(results[0]);
+    atualizarStatusEmpregados(results[0]);
 
   }catch(e){
-    console.error(e);
+    console.error("Erro ao carregar planilhas:", e);
+
+    document.getElementById("painel").innerHTML =
+      "<div style='padding:20px'>Erro ao carregar painel</div>";
   }
 }
+
+  
 
 function atualizarStatusEmpregados(gvizPainel){
   const nomes = ["CACIO","CELSO","NEI"];
