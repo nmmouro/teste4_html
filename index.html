@@ -60,7 +60,7 @@ html,body{
   color:#00ff9c;
 }
   
-/* ========== HEADER ========== */
+/* ========== HEADER (layout do seu cabeçalho) ========== */
   
 header{
   display:grid;
@@ -71,6 +71,7 @@ header{
   background:#020617;
   border-radius:10px;
   border:1px solid #ffffff;
+  height:90px;
 }
 /* 🔹 LOGO */
 .logo{
@@ -105,15 +106,13 @@ header{
   justify-content:center;
   gap:6px;
 }
-  
-header{
-  height:90px;
-}
 
+  /* === Esse bloco controla toda a área principal do seu painel: Painel,Agenda e Agenda Social) === */
+  
 main{
   padding:12px;
   display:grid;
-  grid-template-rows:1fr 1fr 1fr;
+  grid-template-rows:auto auto auto;
   gap:10px;
   height:calc(100vh - 92px);
 }
@@ -132,9 +131,11 @@ main{
 table{
   width:100%;
   border-collapse:collapse;
-  font-size:16px;
+  font-size:14px;
   table-layout: fixed; /* 🔥 ESSENCIAL */
 }
+
+  /* === Define o comportamento visual de todas as células da tabela === */
 
   th, td{
   padding:12px 12px; /* mesmo valor horizontal */
@@ -146,6 +147,8 @@ table{
   border:1px solid #ffffff; /* igual ao cabeçalho */
 }
 
+    /* === Esse bloco controla o comportamento e aparência do cabeçalho da tabela === */
+
 thead th{
   position:sticky;
   top:0;
@@ -155,7 +158,6 @@ thead th{
   border:1px solid var(--border);
   padding:12px;
 }
-
 
 th:last-child,
 td:last-child{
@@ -168,7 +170,7 @@ td.status-icon{
 
   tbody td{
   background:var(--table);
-  border:1px solid var(--border);
+  border:2px solid var(--border);
   padding:12px;
 }
 
@@ -193,7 +195,7 @@ td.status-icon{
   cursor:pointer;
   font-weight:700;
 }
-
+  
 #toggle-audio.off{
   background:#3a0b0b;
   color:#ff4d4d;
@@ -202,56 +204,62 @@ td.status-icon{
 /* ================= PAINEL ================= */
 
 #painel table th:nth-child(1),
-#painel table td:nth-child(1),
+#painel table td:nth-child(1){
+  width: 100px;
+}
 #painel table th:nth-child(2),
-#painel table td:nth-child(2),
+#painel table td:nth-child(2){
+  width: 50px;
+}
 #painel table th:nth-child(3),
 #painel table td:nth-child(3){
-  width: 150px;
+  width: 130px;
 }
 #painel table th:nth-child(4),
 #painel table td:nth-child(4){
-  width: 250px;
+  width: 130px;
 }
-
 #painel table th:nth-child(7),
 #painel table td:nth-child(7){
-  width: 80px;
+  width: 65px;
 }
 
  /* ================= AGAENDA DO DIA ================= */
 
 #agenda table th:nth-child(1),
-#agenda table td:nth-child(1),
+#agenda table td:nth-child(1){
+  width: 100px;
+}  
 #agenda table th:nth-child(2),
-#agenda table td:nth-child(2),
+#agenda table td:nth-child(2){
+  width: 50px;
+}  
 #agenda table th:nth-child(4),
 #agenda table td:nth-child(4){
-  width: 150px;
+  width: 100px;
 }
-
 #agenda table th:nth-child(7),
 #agenda table td:nth-child(7){
-  width: 80px;
+  width: 65px;
 }
 
  /* ================= AGAENDA S SOCIAL ================= */
 
 #social table th:nth-child(1),
-#social table td:nth-child(1),
+#social table td:nth-child(1){
+  width: 100px;
+}
 #social table th:nth-child(2),
 #social table td:nth-child(2){
-  width: 150px;
+  width: 100px;
 }
-
 #social table th:nth-child(3),
 #social table td:nth-child(3){
-  width: 400px;
+  width: 200px;
 }
-
 #social table th:nth-child(6),
 #social table td:nth-child(6){
-  width: 80px;
+  width: 65px;
 }
 
 /* ================= Instalaçao app ================= */
