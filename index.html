@@ -526,11 +526,23 @@ function renderTable(id, g){
 
   h+=`<tr class="${cls}">`;
 
-   const empregado = String(cells[3]?.f ?? cells[3]?.v ?? "").toUpperCase();
+   cells.forEach((c,i)=>{
+  if(i === cells.length-1){
 
-nomes.forEach(nome=>{
-  if(empregado.includes(nome)){
-    status[nome] = true;
+    let icon="";
+
+    if(status.includes("concluido") || status.includes("atendido")){
+      icon="✔";
+    }else if(status.includes("cancelado")){
+      icon="✖";
+    }else if(status.includes("andamento")){
+      icon="⏳";
+    }
+
+    h+=`<td class="status-icon">${icon}</td>`;
+
+  }else{
+    h+=`<td>${escapeHtml(formatCell(c))}</td>`;
   }
 });
 
@@ -613,6 +625,28 @@ function atualizarStatusEmpregados(gvizPainel){
   });
 
   el.innerHTML = html;
+}
+
+  async function fetchSheet(tab){
+  const url =
+    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq`+
+    `?sheet=${encodeURIComponent(tab)}&tqx=out:json&nocache=${Date.now()}`;
+
+  const r = await fetch(url,{
+    cache:"no-store",
+    headers:{
+      "pragma":"no-cache",
+      "cache-control":"no-cache"
+    }
+  });
+
+  const txt = await r.text();
+
+  if(!txt.includes("google.visualization.Query.setResponse")){
+    throw new Error(`Erro ao carregar aba: ${tab}`);
+  }
+
+  return parseGviz(txt);
 }
   
 loadAll();
