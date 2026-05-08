@@ -158,6 +158,10 @@ main{
 
 .card{
   background:var(--card);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  overflow:hidden;
 }
 
 .card h2{
@@ -205,6 +209,14 @@ td:last-child{
 
 td.status-icon{
   width: 50px;
+}
+
+  tbody tr{
+  transition:.2s;
+}
+
+tbody tr:hover td{
+  background:#163067;
 }
 
   tbody td{
