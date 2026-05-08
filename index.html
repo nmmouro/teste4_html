@@ -11,6 +11,21 @@
 
   <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#071029">
+
+<section class="card">
+  <h2>PAINEL</h2>
+  <div id="painel"></div>
+</section>
+
+<section class="card">
+  <h2>AGENDA DO DIA</h2>
+  <div id="agenda"></div>
+</section>
+
+<section class="card">
+  <h2>AGENDA SSERVIÇO SOCIAL</h2>
+  <div id="social"></div>
+</section>
   
 
 <style>
@@ -132,7 +147,7 @@ table{
   width:100%;
   border-collapse:collapse;
   font-size:14px;
-  table-layout: auto; /* 🔥 ESSENCIAL */
+  table-layout: fixed; /* 🔥 ESSENCIAL */
 }
 
   /* === Define o comportamento visual de todas as células da tabela === */
@@ -142,8 +157,8 @@ table{
   font-weight:700;
   text-align:center;
   white-space:nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /*overflow: hidden;*/
+  /*text-overflow: ellipsis;*/
   border:1px solid #ffffff; /* igual ao cabeçalho */
 }
 
@@ -203,65 +218,49 @@ td.status-icon{
 
 /* ================= PAINEL ================= */
 
-#painel table th:nth-child(1),
-#painel table td:nth-child(1){
-  width: 50px;
+#painel .col-data{
+  width:90px;
 }
-#painel table th:nth-child(2),
-#painel table td:nth-child(2){
-  width: 50px;
+
+#painel .col-hora{
+  width:70px;
 }
-#painel table th:nth-child(3),
-#painel table td:nth-child(3){
-  width: 130px;
+
+#painel .col-veiculo{
+  width:140px;
 }
-#painel table th:nth-child(4),
-#painel table td:nth-child(4){
-  width: 130px;
-}
-#painel table th:nth-child(7),
-#painel table td:nth-child(7){
-  width: 65px;
+
+#painel .col-status{
+  width:65px;
 }
 
  /* ================= AGAENDA DO DIA ================= */
 
-#agenda table th:nth-child(1),
-#agenda table td:nth-child(1){
-  width: 100px;
-}  
-#agenda table th:nth-child(2),
-#agenda table td:nth-child(2){
-  width: 50px;
-}  
-#agenda table th:nth-child(4),
-#agenda table td:nth-child(4){
-  width: 100px;
+#agenda .col-data{
+  width:90px;
 }
-#agenda table th:nth-child(7),
-#agenda table td:nth-child(7){
-  width: 65px;
+
+#agenda .col-hora{
+  width:70px;
+}
+
+#agenda .col-status{
+  width:65px;
 }
 
  /* ================= AGAENDA S SOCIAL ================= */
 
-#social table th:nth-child(1),
-#social table td:nth-child(1){
-  width: 100px;
-}
-#social table th:nth-child(2),
-#social table td:nth-child(2){
-  width: 100px;
-}
-#social table th:nth-child(3),
-#social table td:nth-child(3){
-  width: 200px;
-}
-#social table th:nth-child(6),
-#social table td:nth-child(6){
-  width: 65px;
+#social .col-data{
+  width:90px;
 }
 
+#social .col-periodo{
+  width:100px;
+}
+
+#social .col-status{
+  width:65px;
+}
 /* ================= Instalaçao app ================= */
 #install-app{
   background:#0b1a3a;
@@ -500,7 +499,40 @@ function renderTable(id, g){
   const rows = g.table.rows;
 
   let h="<table><thead><tr>";
-  headers.forEach(c=>h+=`<th>${escapeHtml(c)}</th>`);
+  const columnClasses = {
+  painel: [
+    "col-data",
+    "col-hora",
+    "col-veiculo",
+    "col-empregado",
+    "col-motivo",
+    "col-itinerario",
+    "col-status"
+  ],
+
+  agenda: [
+    "col-data",
+    "col-hora",
+    "col-passageiro",
+    "col-setor",
+    "col-motivo",
+    "col-itinerario",
+    "col-status"
+  ],
+
+  social: [
+    "col-data",
+    "col-periodo",
+    "col-passageiro",
+    "col-motivo",
+    "col-itinerario",
+    "col-status"
+  ]
+};
+
+headers.forEach((c,i)=>{
+  h += `<th class="${columnClasses[id][i]}">${escapeHtml(c)}</th>`;
+});
   h+="</tr></thead><tbody>";
 
  rows.forEach(r=>{
@@ -531,7 +563,8 @@ function renderTable(id, g){
         else if(status.includes("andamento")) icon="⏳";
         h+=`<td class="status-icon">${icon}</td>`;
       }else{
-        h+=`<td>${escapeHtml(formatCell(c))}</td>`;
+        const cls = columnClasses[id][i] || "";
+h += `<td class="${cls}">${escapeHtml(formatCell(c))}</td>`;
       }
     });
 
