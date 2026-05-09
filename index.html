@@ -3,6 +3,7 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
@@ -16,6 +17,8 @@
 <meta name="theme-color" content="#071029">
 
 <style>
+
+/* ================= ROOT ================= */
 
 :root{
   --bg:#071029;
@@ -76,6 +79,7 @@ header{
   display:flex;
   align-items:center;
   gap:12px;
+  flex-wrap:wrap;
 }
 
 .title{
@@ -85,7 +89,7 @@ header{
 }
 
 .clock{
-  font-size:26px;
+  font-size:24px;
   font-weight:700;
   color:var(--muted);
 }
@@ -120,7 +124,7 @@ header{
 button{
   background:#0b1a3a;
   color:#fff;
-  border:1px solid rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.15);
   padding:8px 14px;
   border-radius:8px;
   cursor:pointer;
@@ -144,13 +148,13 @@ main{
   display:grid;
   gap:12px;
   height:calc(100vh - 120px);
-  overflow: fixed;
+  overflow:auto;
 }
 
 /* ================= CARDS ================= */
 
 .card{
-  background:rgba(11,26,58,.92);
+  background:rgba(11,26,58,.94);
 
   border-radius:16px;
 
@@ -202,6 +206,8 @@ thead th{
   padding:12px;
 
   border:1px solid var(--border);
+
+  user-select:none;
 }
 
 tbody{
@@ -230,6 +236,33 @@ tbody tr:nth-child(even) td{
 
 tbody tr:hover td{
   background:#163067;
+}
+
+/* ================= RESIZE COLUNAS ================= */
+
+th{
+  position:relative;
+}
+
+.resizer{
+  position:absolute;
+  top:0;
+  right:0;
+
+  width:6px;
+  height:100%;
+
+  cursor:col-resize;
+
+  user-select:none;
+
+  background:transparent;
+
+  transition:.2s;
+}
+
+.resizer:hover{
+  background:rgba(255,255,255,.25);
 }
 
 /* ================= STATUS COLORS ================= */
@@ -279,7 +312,6 @@ td.status-icon{
 
   .right{
     justify-content:center;
-    flex-wrap:wrap;
   }
 
   .title{
@@ -303,22 +335,37 @@ td.status-icon{
 
 <header>
 
-  <img src="logo.png" class="logo" onerror="this.style.display='none'">
+  <img
+    src="logo.png"
+    class="logo"
+    onerror="this.style.display='none'"
+  >
 
   <div class="center">
-    <div class="title">MOVIMENTAÇÃO DIÁRIA</div>
+
+    <div class="title">
+      MOVIMENTAÇÃO DIÁRIA
+    </div>
+
     <div id="status-empregados"></div>
+
   </div>
 
   <div class="right">
 
     <div class="clock" id="clock"></div>
 
-    <button id="toggle-audio" onclick="toggleAudio()">
+    <button
+      id="toggle-audio"
+      onclick="toggleAudio()"
+    >
       🔊 SOM: ON
     </button>
 
-    <button id="install-app" style="display:none;">
+    <button
+      id="install-app"
+      style="display:none;"
+    >
       📲 INSTALAR APP
     </button>
 
@@ -397,6 +444,40 @@ const TABLE_HEADERS = {
     "Motivo",
     "Itinerário",
     "Status"
+  ]
+};
+
+/* ================= COLUMN WIDTHS ================= */
+
+const COLUMN_WIDTHS = {
+
+  painel:[
+    "90px",
+    "90px",
+    "160px",
+    "160px",
+    "260px",
+    "320px",
+    "70px"
+  ],
+
+  agenda:[
+    "90px",
+    "90px",
+    "180px",
+    "140px",
+    "260px",
+    "320px",
+    "70px"
+  ],
+
+  social:[
+    "90px",
+    "120px",
+    "180px",
+    "260px",
+    "320px",
+    "70px"
   ]
 };
 
@@ -571,15 +652,45 @@ function renderTable(id,g){
 
   const headers = TABLE_HEADERS[id];
 
+  const savedWidths =
+    JSON.parse(
+      localStorage.getItem("widths_"+id)
+    ) || COLUMN_WIDTHS[id];
+
   let h = `
-  <table>
+  <table id="table-${id}">
+
+    <colgroup>
+  `;
+
+  savedWidths.forEach(w=>{
+
+    h += `<col style="width:${w}">`;
+
+  });
+
+  h += `
+    </colgroup>
+
     <thead>
       <tr>
   `;
 
-  headers.forEach(col=>{
+  headers.forEach((col,index)=>{
 
-    h += `<th>${col}</th>`;
+    h += `
+    <th>
+
+      ${col}
+
+      <div
+        class="resizer"
+        data-table="${id}"
+        data-index="${index}">
+      </div>
+
+    </th>
+    `;
 
   });
 
@@ -661,6 +772,110 @@ function renderTable(id,g){
   h += "</tbody></table>";
 
   el.innerHTML = h;
+
+  initColumnResize(id);
+}
+
+/* ================= RESIZE ================= */
+
+function initColumnResize(tableId){
+
+  const table =
+  document.getElementById(
+    "table-"+tableId
+  );
+
+  if(!table) return;
+
+  const cols =
+  table.querySelectorAll("col");
+
+  const resizers =
+  table.querySelectorAll(".resizer");
+
+  resizers.forEach(resizer=>{
+
+    resizer.addEventListener(
+      "mousedown",
+      initResize
+    );
+
+  });
+
+  function initResize(e){
+
+    e.preventDefault();
+
+    const index =
+    Number(
+      e.target.dataset.index
+    );
+
+    const startX = e.pageX;
+
+    const col = cols[index];
+
+    const startWidth =
+    parseInt(
+      window.getComputedStyle(col).width,
+      10
+    );
+
+    function resize(e){
+
+      const width =
+      startWidth + (
+        e.pageX - startX
+      );
+
+      col.style.width =
+      width + "px";
+    }
+
+    function stopResize(){
+
+      document.removeEventListener(
+        "mousemove",
+        resize
+      );
+
+      document.removeEventListener(
+        "mouseup",
+        stopResize
+      );
+
+      saveWidths();
+    }
+
+    document.addEventListener(
+      "mousemove",
+      resize
+    );
+
+    document.addEventListener(
+      "mouseup",
+      stopResize
+    );
+  }
+
+  function saveWidths(){
+
+    const widths = [];
+
+    cols.forEach(col=>{
+
+      widths.push(
+        window.getComputedStyle(col)
+        .width
+      );
+
+    });
+
+    localStorage.setItem(
+      "widths_"+tableId,
+      JSON.stringify(widths)
+    );
+  }
 }
 
 /* ================= FETCH ================= */
@@ -680,7 +895,7 @@ async function fetchSheet(tab){
   return parseGviz(await r.text());
 }
 
-/* ================= STATUS EMPREGADOS ================= */
+/* ================= STATUS ================= */
 
 function atualizarStatusEmpregados(g){
 
