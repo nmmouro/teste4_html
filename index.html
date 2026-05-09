@@ -209,84 +209,15 @@ th{
 
   z-index:10;
 
+  user-select:none;
+
   background:transparent;
 }
 
 .resizer:hover{
   background:rgba(255,255,255,.25);
-}}
-
-thead th{
-  position:sticky;
-  top:0;
-
-  z-index:2;
-
-  background:var(--header);
-
-  color:#fff;
-
-  padding:12px;
-
-  border:1px solid var(--border);
-
-  user-select:none;
 }
 
-tbody{
-  transition:opacity .2s;
-}
-
-tbody td{
-  padding:12px;
-
-  text-align:center;
-
-  border:1px solid var(--border);
-
-  background:var(--table);
-
-  font-weight:600;
-
-  white-space:normal;
-
-  word-break:break-word;
-}
-
-tbody tr:nth-child(even) td{
-  background:var(--table-alt);
-}
-
-tbody tr:hover td{
-  background:#163067;
-}
-
-/* ================= RESIZE COLUNAS ================= */
-
-th{
-  position:relative;
-}
-
-.resizer{
-  position:absolute;
-  top:0;
-  right:0;
-
-  width:6px;
-  height:100%;
-
-  cursor:col-resize;
-
-  user-select:none;
-
-  background:transparent;
-
-  transition:.2s;
-}
-
-.resizer:hover{
-  background:rgba(255,255,255,.25);
-}
 
 /* ================= STATUS COLORS ================= */
 
@@ -675,16 +606,11 @@ function renderTable(id,g){
 
   const headers = TABLE_HEADERS[id];
 
-  const savedWidths =
-    JSON.parse(
-      localStorage.getItem("widths_"+id)
-    ) || COLUMN_WIDTHS[id];
-
-  let h = `
-  <table id="table-${id}">
-
-    <colgroup>
-  `;
+  const startWidth =
+parseInt(
+  window.getComputedStyle(col).width,
+  10
+);
 
   savedWidths.forEach(w=>{
 
@@ -896,7 +822,7 @@ function initColumnResize(tableId){
       JSON.stringify(widths)
     );
   }
-}
+
 /* ================= FETCH ================= */
 
 async function fetchSheet(tab){
