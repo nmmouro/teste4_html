@@ -190,6 +190,11 @@ table{
   border:1px solid #ffffff; /* igual ao cabeçalho */
 }
 
+  td{
+  white-space:normal;
+  word-break:break-word;
+}
+
     /* === Esse bloco controla o comportamento e aparência do cabeçalho da tabela === */
 
 thead th{
@@ -725,7 +730,7 @@ function atualizarStatusEmpregados(gvizPainel){
   
 loadAll();
 updateSoundButton();
-setInterval(loadAll, 10000);
+setInterval(loadAll, 30000);
 
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("service-worker.js")
