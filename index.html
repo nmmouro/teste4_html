@@ -207,10 +207,7 @@ thead th{
   padding:12px;
 }
 
-th:last-child,
-td:last-child{
-  width:50px;
-}
+
 
 td.status-icon{
   width: 50px;
@@ -259,57 +256,16 @@ tbody tr:hover td{
 
 /* ================= PAINEL ================= */
 
-#painel .col-data{
-  width:50px;
-}
-
-#painel .col-hora{
-  width:70px;
-}
-
-#painel .col-veiculo{
-  width:140px;
-}
-
-#painel .col-itinerario{
-  width:30px;
-}
-
-#painel .col-status{
-  width:65px;
-}
+  
 
  /* ================= AGAENDA DO DIA ================= */
 
-#agenda .col-data{
-  width:90px;
-}
 
-#agenda .col-hora{
-  width:70px;
-}
-
-#agenda .col-setor{
-  width:70px;
-}
-
-#agenda .col-status{
-  width:65px;
-}
 
  /* ================= AGAENDA S SOCIAL ================= */
 
-#social .col-data{
-  width:90px;
-}
 
-#social .col-periodo{
-  width:100px;
-}
-
-#social .col-status{
-  width:65px;
-}
+  
 /* ================= Instalaçao app ================= */
 #install-app{
   background:#0b1a3a;
@@ -536,6 +492,40 @@ function generateCleanHash(results){
   );
 }
 
+
+  const COLUMN_WIDTHS = {
+
+  painel: [
+    "90px",   // data
+    "70px",   // hora
+    "150px",  // veículo
+    "140px",  // empregado
+    "auto",   // motivo
+    "320px",  // itinerário
+    "60px"    // status
+  ],
+
+  agenda: [
+    "90px",
+    "70px",
+    "180px",
+    "120px",
+    "auto",
+    "320px",
+    "60px"
+  ],
+
+  social: [
+    "90px",
+    "100px",
+    "180px",
+    "auto",
+    "320px",
+    "60px"
+  ]
+
+};
+
 /* ================= RENDER ================= */
 function renderTable(id, g){
   const el = document.getElementById(id);
@@ -547,7 +537,24 @@ function renderTable(id, g){
   const headers = TABLE_HEADERS[id] || [];
   const rows = g.table.rows;
 
-  let h="<table><thead><tr>";
+  
+
+  let h = "<table>";
+
+/* ================= COLGROUP ================= */
+
+h += "<colgroup>";
+
+COLUMN_WIDTHS[id].forEach(w=>{
+  h += `<col style="width:${w}">`;
+});
+
+h += "</colgroup>";
+
+/* ================= HEADER ================= */
+
+h += "<thead><tr>";
+  
   const columnClasses = {
   painel: [
     "col-data",
@@ -620,10 +627,8 @@ headers.forEach((c,i)=>{
 
   }else{
         
-const colClass = columnClasses[id][i] || "";
-
 h += `
-  <td class="${colClass}">
+  <td>
     ${escapeHtml(formatCell(c))}
   </td>
 `;
