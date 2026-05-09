@@ -183,10 +183,38 @@ main{
 /* ================= TABLE ================= */
 
 table{
-  width:max-content;
-  min-width:100%;
+  width:100%;
+  min-width:1200px;
+
   border-collapse:collapse;
+
+  table-layout:fixed;
 }
+
+th{
+  position:relative;
+  overflow:visible;
+}
+
+.resizer{
+  position:absolute;
+
+  top:0;
+  right:-3px;
+
+  width:8px;
+  height:100%;
+
+  cursor:col-resize;
+
+  z-index:10;
+
+  background:transparent;
+}
+
+.resizer:hover{
+  background:rgba(255,255,255,.25);
+}}
 
 thead th{
   position:sticky;
@@ -773,83 +801,80 @@ function renderTable(id,g){
 
 /* ================= RESIZE ================= */
 
+/* ================= RESIZE ================= */
+
 function initColumnResize(tableId){
 
   const table =
-  document.getElementById(
-    "table-"+tableId
-  );
+    document.getElementById("table-" + tableId);
 
   if(!table) return;
 
-  const cols =
-  table.querySelectorAll("col");
+  const cols = table.querySelectorAll("col");
 
   const resizers =
-  table.querySelectorAll(".resizer");
+    table.querySelectorAll(".resizer");
 
-  resizers.forEach(resizer=>{
+  resizers.forEach(resizer => {
 
-    resizer.addEventListener(
-      "mousedown",
-      initResize
-    );
+    resizer.onmousedown = startResize;
 
   });
 
-  function initResize(e){
+  function startResize(e){
 
     e.preventDefault();
 
     const index =
-    Number(
-      e.target.dataset.index
-    );
-
-    const startX = e.pageX;
+      Number(e.target.dataset.index);
 
     const col = cols[index];
 
+    const startX = e.pageX;
+
     const startWidth =
-    parseInt(
-      window.getComputedStyle(col).width,
-      10
-    );
+      col.offsetWidth;
 
-    function resize(e){
+    document.body.style.cursor =
+      "col-resize";
 
-      const width =
-      startWidth + (
-        e.pageX - startX
-      );
+    function onMouseMove(e){
+
+      const newWidth =
+        startWidth + (e.pageX - startX);
+
+      if(newWidth < 50) return;
 
       col.style.width =
-      width + "px";
+        newWidth + "px";
     }
 
-    function stopResize(){
+    function onMouseUp(){
 
       document.removeEventListener(
         "mousemove",
-        resize
+        onMouseMove
       );
 
       document.removeEventListener(
         "mouseup",
-        stopResize
+        onMouseUp
       );
+
+      document.body.style.cursor =
+        "default";
 
       saveWidths();
     }
 
     document.addEventListener(
       "mousemove",
-      resize
+      onMouseMove
     );
 
     document.addEventListener(
       "mouseup",
-      stopResize
+      onMouseUp
     );
   }
 
@@ -857,22 +882,21 @@ function initColumnResize(tableId){
 
     const widths = [];
 
-    cols.forEach(col=>{
+    cols.forEach(col => {
 
       widths.push(
-        window.getComputedStyle(col)
-        .width
+        col.style.width ||
+        window.getComputedStyle(col).width
       );
 
     });
 
     localStorage.setItem(
-      "widths_"+tableId,
+      "widths_" + tableId,
       JSON.stringify(widths)
     );
   }
 }
-
 /* ================= FETCH ================= */
 
 async function fetchSheet(tab){
