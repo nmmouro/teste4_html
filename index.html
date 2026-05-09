@@ -194,7 +194,10 @@ main{
 th{
   position:relative;
   overflow:visible;
+
+  min-width:50px;
 }
+  
 
 .resizer{
   position:absolute;
@@ -755,6 +758,9 @@ function initColumnResize(tableId){
   const cols =
     table.querySelectorAll("col");
 
+  const headers =
+    table.querySelectorAll("th");
+
   const resizers =
     table.querySelectorAll(".resizer");
 
@@ -778,12 +784,14 @@ function initColumnResize(tableId){
 
     const col = cols[index];
 
+    const th = headers[index];
+
     const startX = e.pageX;
 
     const startWidth =
       parseInt(
         window
-        .getComputedStyle(col)
+        .getComputedStyle(th)
         .width,
         10
       );
@@ -799,6 +807,17 @@ function initColumnResize(tableId){
 
       if(width < 50) return;
 
+      /* altera TH */
+      th.style.width =
+        width + "px";
+
+      th.style.minWidth =
+        width + "px";
+
+      th.style.maxWidth =
+        width + "px";
+
+      /* altera COL */
       col.style.width =
         width + "px";
     }
@@ -836,11 +855,11 @@ function initColumnResize(tableId){
 
     const widths = [];
 
-    cols.forEach(col=>{
+    headers.forEach(th=>{
 
       widths.push(
         window
-        .getComputedStyle(col)
+        .getComputedStyle(th)
         .width
       );
 
@@ -852,7 +871,6 @@ function initColumnResize(tableId){
     );
   }
 }
-
 /* ================= FETCH ================= */
 
 async function fetchSheet(tab){
