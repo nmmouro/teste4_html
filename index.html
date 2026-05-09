@@ -182,7 +182,7 @@ main{
 
 /* ================= TABLE ================= */
 
-table{
+  table{
   width:100%;
   min-width:1200px;
 
@@ -200,9 +200,9 @@ th{
   position:absolute;
 
   top:0;
-  right:-3px;
+  right:-4px;
 
-  width:8px;
+  width:10px;
   height:100%;
 
   cursor:col-resize;
@@ -591,6 +591,7 @@ function generateCleanHash(results){
 
 /* ================= RENDER ================= */
 
+
 function renderTable(id,g){
 
   const el = document.getElementById(id);
@@ -606,15 +607,24 @@ function renderTable(id,g){
 
   const headers = TABLE_HEADERS[id];
 
-  const startWidth =
-parseInt(
-  window.getComputedStyle(col).width,
-  10
-);
+  const savedWidths =
+    JSON.parse(
+      localStorage.getItem(
+        "widths_" + id
+      )
+    ) || COLUMN_WIDTHS[id];
+
+  let h = `
+  <table id="table-${id}">
+
+    <colgroup>
+  `;
 
   savedWidths.forEach(w=>{
 
-    h += `<col style="width:${w}">`;
+    h += `
+      <col style="width:${w}">
+    `;
 
   });
 
@@ -628,22 +638,25 @@ parseInt(
   headers.forEach((col,index)=>{
 
     h += `
-    <th>
+      <th>
 
-      ${col}
+        ${col}
 
-      <div
-        class="resizer"
-        data-table="${id}"
-        data-index="${index}">
-      </div>
+        <div
+          class="resizer"
+          data-index="${index}">
+        </div>
 
-    </th>
+      </th>
     `;
-
   });
 
-  h += "</tr></thead><tbody>";
+  h += `
+      </tr>
+    </thead>
+
+    <tbody>
+  `;
 
   rows.forEach(r=>{
 
@@ -659,28 +672,29 @@ parseInt(
       return;
 
     const status =
-    (valores.at(-1) || "")
-    .toLowerCase();
+      (valores.at(-1) || "")
+      .toLowerCase();
 
     let cls = "";
 
-    if(status.includes("cancelado"))
+    if(status.includes("cancelado")){
       cls = "status-cancelado";
-
-    else if(status.includes("concluido"))
+    }
+    else if(status.includes("concluido")){
       cls = "status-concluido";
-
-    else if(status.includes("andamento"))
+    }
+    else if(status.includes("andamento")){
       cls = "status-andamento";
-
-    else if(status.includes("atendido"))
+    }
+    else if(status.includes("atendido")){
       cls = "status-atendido";
+    }
 
     h += `<tr class="${cls}">`;
 
     cells.forEach((c,i)=>{
 
-      if(i === cells.length-1){
+      if(i === cells.length - 1){
 
         let icon = "";
 
@@ -698,27 +712,29 @@ parseInt(
         }
 
         h += `
-        <td class="status-icon">
-          ${icon}
-        </td>
+          <td class="status-icon">
+            ${icon}
+          </td>
         `;
 
       }else{
 
         h += `
-        <td>
-          ${escapeHtml(formatCell(c))}
-        </td>
+          <td>
+            ${escapeHtml(formatCell(c))}
+          </td>
         `;
       }
 
     });
 
-    h += "</tr>";
-
+    h += `</tr>`;
   });
 
-  h += "</tbody></table>";
+  h += `
+    </tbody>
+  </table>
+  `;
 
   el.innerHTML = h;
 
@@ -727,23 +743,27 @@ parseInt(
 
 /* ================= RESIZE ================= */
 
-/* ================= RESIZE ================= */
-
 function initColumnResize(tableId){
 
   const table =
-    document.getElementById("table-" + tableId);
+    document.getElementById(
+      "table-" + tableId
+    );
 
   if(!table) return;
 
-  const cols = table.querySelectorAll("col");
+  const cols =
+    table.querySelectorAll("col");
 
   const resizers =
     table.querySelectorAll(".resizer");
 
-  resizers.forEach(resizer => {
+  resizers.forEach(resizer=>{
 
-    resizer.onmousedown = startResize;
+    resizer.addEventListener(
+      "mousedown",
+      startResize
+    );
 
   });
 
@@ -752,27 +772,35 @@ function initColumnResize(tableId){
     e.preventDefault();
 
     const index =
-      Number(e.target.dataset.index);
+      Number(
+        e.target.dataset.index
+      );
 
     const col = cols[index];
 
     const startX = e.pageX;
 
     const startWidth =
-      col.offsetWidth;
+      parseInt(
+        window
+        .getComputedStyle(col)
+        .width,
+        10
+      );
 
     document.body.style.cursor =
       "col-resize";
 
     function onMouseMove(e){
 
-      const newWidth =
-        startWidth + (e.pageX - startX);
+      const width =
+        startWidth +
+        (e.pageX - startX);
 
-      if(newWidth < 50) return;
+      if(width < 50) return;
 
       col.style.width =
-        newWidth + "px";
+        width + "px";
     }
 
     function onMouseUp(){
@@ -808,11 +836,12 @@ function initColumnResize(tableId){
 
     const widths = [];
 
-    cols.forEach(col => {
+    cols.forEach(col=>{
 
       widths.push(
-        col.style.width ||
-        window.getComputedStyle(col).width
+        window
+        .getComputedStyle(col)
+        .width
       );
 
     });
@@ -822,6 +851,7 @@ function initColumnResize(tableId){
       JSON.stringify(widths)
     );
   }
+}
 
 /* ================= FETCH ================= */
 
