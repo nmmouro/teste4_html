@@ -8,6 +8,10 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
+
+  <button onclick="document.documentElement.requestFullscreen()">
+⛶ TELA CHEIA
+</button>
   
 
   <link rel="manifest" href="manifest.json">
@@ -26,6 +30,7 @@
   --border:#1e2f5c;    /* bordas suaves */
   --text:#f7f9fa;
   --muted:#9fb3ff;
+  --accent:#6ea8ff;
 }
 
   /* ========== HTML ========== */
@@ -75,19 +80,23 @@ html,body{
   }
 
   .logo{
-    margin:auto;
-  }
+  width:140px;
+  max-height:70px;
+  object-fit:contain;
+}
 
-  .center,
-  .right{
-    grid-column:auto;
-    grid-row:auto;
-    align-items:center;
-  }
+ .center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
 
-  .right{
-    justify-content:center;
-  }
+.right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
 
   .title{
     font-size:22px;
@@ -101,7 +110,15 @@ html,body{
   
   
 /* ========== HEADER (layout do seu cabeçalho) ========== */
-  
+  header{
+  display:grid;
+  grid-template-columns:180px 1fr auto;
+  align-items:center;
+  gap:20px;
+  padding:14px 20px;
+  background:#08142d;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
 
   /* === Esse bloco controla toda a área principal do seu painel: Painel,Agenda e Agenda Social) === */
   
@@ -118,7 +135,8 @@ main{
   border-radius:14px;
   border:1px solid rgba(255,255,255,.08);
   box-shadow:0 6px 20px rgba(0,0,0,.25);
-  overflow:hidden;
+  overflow:auto;
+  backdrop-filter:blur(8px);
 }
 
 .card h2{
@@ -133,6 +151,7 @@ table{
   border-collapse:collapse;
   font-size:14px;
   table-layout: fixed; /* 🔥 ESSENCIAL */
+  min-width:1200px;
 }
 
   /* === Define o comportamento visual de todas as células da tabela === */
@@ -170,8 +189,8 @@ td.status-icon{
   width: 50px;
 }
 
-  tbody tr{
-  transition:.2s;
+tbody{
+  transition:opacity .2s;
 }
 
 tbody tr:hover td{
@@ -432,7 +451,7 @@ function updateClock(){
     n.toLocaleDateString("pt-BR")+" — "+
     n.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
-setInterval(updateClock,30000);
+setInterval(updateClock, 1000);
 updateClock();
 
 /* ================= HELPERS ================= */
