@@ -616,8 +616,17 @@ headers.forEach((c,i)=>{
       else if(status.includes("andamento")){
            icon = "⏳";
 }
+        h += `<td class="status-icon">${icon}</td>`;
+
+  }else{
         
-h += `<td class="${cls}">${escapeHtml(formatCell(c))}</td>`;
+const colClass = columnClasses[id][i] || "";
+
+h += `
+  <td class="${colClass}">
+    ${escapeHtml(formatCell(c))}
+  </td>
+`;
       }
     });
 
