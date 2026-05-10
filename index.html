@@ -828,12 +828,14 @@ function atualizarStatusEmpregados(g){
   const nomes = [
     "CACIO",
     "CELSO",
-    "NEIDIVAL"
+    "NEI"
   ];
 
   const status = {};
 
   nomes.forEach(n => status[n] = false);
+
+  /* SOMENTE DADOS DO PAINEL */
 
   const rows = g?.table?.rows || [];
 
@@ -841,41 +843,28 @@ function atualizarStatusEmpregados(g){
 
     const cells = r.c || [];
 
+    /* COLUNA EMPREGADO */
     const empregado =
       String(cells[3]?.f ?? cells[3]?.v ?? "")
       .toUpperCase()
       .trim();
 
+    /* COLUNA STATUS */
     const situacao =
-      String(cells[7]?.f ?? cells[7]?.v ?? "")
+      String(cells[6]?.f ?? cells[6]?.v ?? "")
       .toLowerCase()
       .trim();
 
-    /* STATUS QUE INDICAM OCUPADO */
+    /* OCUPADO SOMENTE QUANDO STATUS = ANDAMENTO */
 
     const ocupado =
-      situacao.includes("andamento") ||
-      situacao.includes("em rota") ||
-      situacao.includes("aguardando") ||
-      situacao.includes("atendido");
+      situacao.includes("andamento");
 
-    /* STATUS QUE INDICAM LIVRE */
-
-    const livre =
-      situacao.includes("concluido") ||
-      situacao.includes("cancelado") ||
-      situacao.includes("finalizado");
-     situacao.includes("⏳");
-
-    if(nomes.includes(empregado)){
-
-      if(ocupado){
-        status[empregado] = true;
-      }
-
-      if(livre){
-        status[empregado] = false;
-      }
+    if(
+      nomes.includes(empregado)
+      && ocupado
+    ){
+      status[empregado] = true;
     }
 
   });
