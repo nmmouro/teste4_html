@@ -908,8 +908,14 @@ function atualizarStatusEmpregados(g){
     .toLowerCase()
     .trim();
 
-    const ativo =
-    situacao.includes("andamento");
+   const ativo =
+
+  situacao.includes("andamento")
+
+  ||
+
+  situacao.includes("atendido");
+
 
     if(ativo && nomes.includes(empregado)){
 
