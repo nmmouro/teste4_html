@@ -49,16 +49,32 @@ html,body{
 /* ================= HEADER ================= */
 
 header{
+
   display:grid;
-  grid-template-columns:auto 1fr auto;
+
+  grid-template-columns:
+    auto
+    1fr
+    auto
+    auto;
+
   align-items:center;
-  gap:20px;
+
+  gap:24px;
 
   padding:14px 20px;
 
   background:#08142d;
 
-  border-bottom:1px solid rgba(255,255,255,.08);
+  border-bottom:
+    1px solid rgba(255,255,255,.08);
+}
+
+/* ===== LOGO ===== */
+
+.header-logo{
+  display:flex;
+  align-items:center;
 }
 
 .logo{
@@ -67,78 +83,93 @@ header{
   object-fit:contain;
 }
 
-.center{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
+/* ===== CENTRO ===== */
 
-.right{
+.header-center{
+
   display:flex;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  gap:8px;
 }
 
 .title{
+
   font-size:30px;
+
   font-weight:700;
+
   color:var(--accent);
+
+  line-height:1.1;
 }
 
-.clock{
-  font-size:24px;
-  font-weight:700;
-  color:var(--muted);
-}
-
-/* ================= STATUS ================= */
+/* ===== STATUS ===== */
 
 #status-empregados{
-  margin-top:8px;
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:8px;
 }
 
 #status-empregados span{
-  display:inline-block;
-  margin:0 6px;
+
+  display:inline-flex;
+
+  align-items:center;
+
+  justify-content:center;
+
   padding:6px 12px;
+
   border-radius:8px;
+
   font-size:14px;
+
   font-weight:700;
 }
 
-.ocupado{
-  background:rgba(255,77,77,.15);
-  color:#ff4d4d;
+/* ===== BOTÕES ===== */
+
+.header-buttons{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  flex-wrap:wrap;
 }
 
-.livre{
-  background:rgba(0,255,156,.15);
-  color:#00ff9c;
+/* ===== RELÓGIO ===== */
+
+.header-clock{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:flex-end;
 }
 
-/* ================= BUTTONS ================= */
+.clock{
 
-button{
-  background:#0b1a3a;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.15);
-  padding:8px 14px;
-  border-radius:8px;
-  cursor:pointer;
+  font-size:24px;
+
   font-weight:700;
-  transition:.2s;
+
+  color:var(--muted);
+
+  white-space:nowrap;
 }
 
-button:hover{
-  background:#163067;
-}
-
-#toggle-audio.off{
-  background:#3a0b0b;
-  color:#ff4d4d;
-}
 
 /* ================= MAIN ================= */
 
@@ -276,15 +307,21 @@ td.status-icon{
 @media(max-width:1200px){
 
   header{
+
     grid-template-columns:1fr;
+
     text-align:center;
   }
 
-  .logo{
-    margin:auto;
+  .header-logo,
+  .header-center,
+  .header-buttons,
+  .header-clock{
+
+    justify-content:center;
   }
 
-  .right{
+  #status-empregados{
     justify-content:center;
   }
 
@@ -295,7 +332,6 @@ td.status-icon{
   .clock{
     font-size:20px;
   }
-
 }
 
 </style>
@@ -309,13 +345,19 @@ td.status-icon{
 
 <header>
 
-  <img
-    src="logo.png"
-    class="logo"
-    onerror="this.style.display='none'"
-  >
+  <!-- LOGO -->
+  <div class="header-logo">
 
-  <div class="center">
+    <img
+      src="logo.png"
+      class="logo"
+      onerror="this.style.display='none'"
+    >
+
+  </div>
+
+  <!-- TÍTULO + STATUS -->
+  <div class="header-center">
 
     <div class="title">
       MOVIMENTAÇÃO DIÁRIA
@@ -325,9 +367,8 @@ td.status-icon{
 
   </div>
 
-  <div class="right">
-
-    <div class="clock" id="clock"></div>
+  <!-- BOTÕES -->
+  <div class="header-buttons">
 
     <button
       id="toggle-audio"
@@ -346,6 +387,13 @@ td.status-icon{
     <button onclick="toggleFullscreen()">
       ⛶ TELA CHEIA
     </button>
+
+  </div>
+
+  <!-- RELÓGIO -->
+  <div class="header-clock">
+
+    <div class="clock" id="clock"></div>
 
   </div>
 
