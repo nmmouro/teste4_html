@@ -625,8 +625,8 @@ function renderTable(id,g){
 
     let cls = "";
 
- if( status.includes("concluido") || status.includes("atendido") ){ icon = "✔"; } 
- else if(status.includes("cancelado")){ icon = "✖"; } 
+ if( status.includes("concluido") || status.includes("atendido") ){ icon = '<span style="color:#00ff9c;font-weight:700;">✔</span>'; } 
+ else if(status.includes("cancelado")){ icon = '<span style="color:#ff4d4d;font-weight:700;">✖</span>'; } 
  else if(status.includes("andamento")){ icon = "⏳"; }
 
     h += `<tr class="${cls}">`;
