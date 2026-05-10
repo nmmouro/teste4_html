@@ -833,48 +833,66 @@ function atualizarStatusEmpregados(g){
 
   const status = {};
 
-  nomes.forEach(n=>status[n]=false);
+  nomes.forEach(n => status[n] = false);
 
   const rows = g?.table?.rows || [];
 
-  rows.forEach(r=>{
+  rows.forEach(r => {
 
     const cells = r.c || [];
 
     const empregado =
-    String(cells[4]?.f ?? cells[4]?.v ?? "")
-    .toUpperCase()
-    .trim();
+      String(cells[3]?.f ?? cells[3]?.v ?? "")
+      .toUpperCase()
+      .trim();
 
     const situacao =
-    String(cells[7]?.f ?? cells[7]?.v ?? "")
-    .toLowerCase()
-    .trim();
+      String(cells[6]?.f ?? cells[6]?.v ?? "")
+      .toLowerCase()
+      .trim();
 
-    const ativo =
-    situacao.includes("andamento");
+    /* STATUS QUE INDICAM OCUPADO */
 
-    if(ativo && nomes.includes(empregado)){
+    const ocupado =
+      situacao.includes("andamento") ||
+      situacao.includes("em rota") ||
+      situacao.includes("aguardando") ||
+      situacao.includes("atendido");
 
-      status[empregado] = true;
+    /* STATUS QUE INDICAM LIVRE */
+
+    const livre =
+      situacao.includes("concluido") ||
+      situacao.includes("cancelado") ||
+      situacao.includes("finalizado");
+
+    if(nomes.includes(empregado)){
+
+      if(ocupado){
+        status[empregado] = true;
+      }
+
+      if(livre){
+        status[empregado] = false;
+      }
     }
 
   });
 
   const el =
-  document.getElementById(
-    "status-empregados"
-  );
+    document.getElementById(
+      "status-empregados"
+    );
 
   let html = "";
 
-  nomes.forEach(nome=>{
+  nomes.forEach(nome => {
 
     html += status[nome]
 
-    ? `<span class="ocupado">${nome} (OCUPADO)</span>`
+      ? `<span class="ocupado">${nome} (OCUPADO)</span>`
 
-    : `<span class="livre">${nome} (LIVRE)</span>`;
+      : `<span class="livre">${nome} (LIVRE)</span>`;
 
   });
 
