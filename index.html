@@ -625,18 +625,17 @@ function renderTable(id,g){
 
     let cls = "";
 
-    if(status.includes("cancelado")){
-      cls = "status-cancelado";
-    }
-    else if(status.includes("concluido")){
-      cls = "status-concluido";
-    }
     else if(status.includes("andamento")){
-      cls = "status-andamento";
-    }
-    else if(status.includes("atendido")){
-      cls = "status-atendido";
-    }
+ if(
+  status.includes("concluido")
+  || status.includes("atendido")
+){
+  icon = '<span style="color:#00ff9c;font-weight:700;">✔</span>';
+}
+else if(status.includes("cancelado")){
+  icon = '<span style="color:#ff4d4d;font-weight:700;">✖</span>';
+} icon = "⏳";
+}
 
     h += `<tr class="${cls}">`;
 
