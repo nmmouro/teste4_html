@@ -880,65 +880,39 @@ async function fetchSheet(tab){
 
 /* ================= STATUS ================= */
 
-function atualizarStatusEmpregados(g){
+function atualizarStatusEmpregados(gvizPainel){
+  const nomes = ["CACIO","CELSO","NEI"];
+  const status = {
+    CACIO:false,
+    CELSO:false,
+    NEI:false
+  };
 
-  const nomes = [
-    "CACIO",
-    "CELSO",
-    "NEI"
-  ];
-
-  const status = {};
-
-  nomes.forEach(n=>status[n]=false);
-
-  const rows = g?.table?.rows || [];
+  const rows = gvizPainel?.table?.rows || [];
 
   rows.forEach(r=>{
-
     const cells = r.c || [];
 
-    const empregado =
-    String(cells[3]?.f ?? cells[3]?.v ?? "")
-    .toUpperCase()
-    .trim();
+    cells.forEach(c=>{
+      const valor = String(c?.f ?? c?.v ?? "").toUpperCase();
 
-    const situacao =
-    String(cells[6]?.f ?? cells[6]?.v ?? "")
-    .toLowerCase()
-    .trim();
-
-   const ativo =
-
-  situacao.includes("ANDAMENTO")
-
-  ||
-
-  situacao.includes("ATENDIDO");
-
-
-    if(ativo && nomes.includes(empregado)){
-
-      status[empregado] = true;
-    }
-
+      nomes.forEach(nome=>{
+        if(valor.includes(nome)){
+          status[nome] = true;
+        }
+      });
+    });
   });
 
-  const el =
-  document.getElementById(
-    "status-empregados"
-  );
+  const el = document.getElementById("status-empregados");
 
   let html = "";
-
   nomes.forEach(nome=>{
-
-    html += status[nome]
-
-    ? `<span class="ocupado">${nome} (OCUPADO)</span>`
-
-    : `<span class="livre">${nome} (LIVRE)</span>`;
-
+    if(status[nome]){
+      html += `<span class="ocupado">${nome} (OCUPADO)</span>`;
+    }else{
+      html += `<span class="livre">${nome} (LIVRE)</span>`;
+    }
   });
 
   el.innerHTML = html;
