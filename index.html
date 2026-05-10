@@ -146,7 +146,7 @@ main{
   padding:12px;
   display:grid;
   gap:12px;
-  height:calc(100vh - 120px);
+  height:calc(100vh - 92px);
   overflow:auto;
   text-align:center;
 }
@@ -292,11 +292,7 @@ td.status-icon{
 
 <header>
 
-  <img
-    src="logo.png"
-    class="logo"
-    onerror="this.style.display='none'"
-  >
+  <img src="logo.png" class="logo" onerror="this.style.display='none'">
 
   <div class="center">
 
@@ -314,15 +310,13 @@ td.status-icon{
 
     <button
       id="toggle-audio"
-      onclick="toggleAudio()"
-    >
+      onclick="toggleAudio()">
       🔊 SOM: ON
     </button>
 
     <button
       id="install-app"
-      style="display:none;"
-    >
+      style="display:none;">
       📲 INSTALAR APP
     </button>
 
@@ -374,34 +368,11 @@ const TABS = [
 
 const TABLE_HEADERS = {
 
-  painel:[
-    "Data",
-    "Hora",
-    "Veículo",
-    "Empregado",
-    "Passageiro/Motivo",
-    "Itinerário",
-    "Status"
-  ],
+  painel:["Data", "Hora", "Veículo", "Empregado", "Passageiro/Motivo", "Itinerário", "Status"],
 
-  agenda:[
-    "Data",
-    "Hora",
-    "Passageiro",
-    "Setor",
-    "Motivo",
-    "Itinerário",
-    "Status"
-  ],
+  agenda:["Data", "Hora", "Passageiro", "Setor", "Motivo", "Itinerário", "Status"],
 
-  social:[
-    "Data",
-    "Período",
-    "Passageiro",
-    "Motivo",
-    "Itinerário",
-    "Status"
-  ]
+  social:["Data", "Período", "Passageiro", "Motivo", "Itinerário", "Status"]
 };
 
 /* ================= COLUMN WIDTHS ================= */
@@ -475,10 +446,7 @@ function toggleAudio(){
 
   soundEnabled = !soundEnabled;
 
-  localStorage.setItem(
-    "sound",
-    soundEnabled ? "on" : "off"
-  );
+  localStorage.setItem("sound", soundEnabled ? "on" : "off");
 
   updateSoundButton();
 }
@@ -617,56 +585,33 @@ function renderTable(id,g){
       )
     ) || COLUMN_WIDTHS[id];
 
-  let h = `
-  <table id="table-${id}">
-
-    <colgroup>
-  `;
+  let h = `<table id="table-${id}"> <colgroup>`;
 
   savedWidths.forEach(w=>{
 
-    h += `
-      <col style="width:${w}">
-    `;
-
+    h += `<col style="width:${w}">`;
   });
 
-  h += `
-    </colgroup>
-
-    <thead>
-      <tr>
-  `;
+  h += `</colgroup> <thead> <tr>`;
 
   headers.forEach((col,index)=>{
 
-    h += `
-      <th>
-
-        ${col}
-
-        <div
+    h += `<th> ${col}
+    <div
           class="resizer"
           data-index="${index}">
-        </div>
+    </div>
 
-      </th>
-    `;
+    </th> `;
   });
 
-  h += `
-      </tr>
-    </thead>
-
-    <tbody>
-  `;
+  h += `</tr> </thead> <tbody>`;
 
   rows.forEach(r=>{
 
     const cells = r.c || [];
 
-    const valores = cells.map(
-      c => (c?.f ?? c?.v ?? "")
+    const valores = cells.map(c => (c?.f ?? c?.v ?? "")
       .toString()
       .trim()
     );
@@ -714,19 +659,11 @@ function renderTable(id,g){
           icon = "⏳";
         }
 
-        h += `
-          <td class="status-icon">
-            ${icon}
-          </td>
-        `;
+        h += `<td class="status-icon"> ${icon} </td>`;
 
       }else{
 
-        h += `
-          <td>
-            ${escapeHtml(formatCell(c))}
-          </td>
-        `;
+        h += `<td> ${escapeHtml(formatCell(c))} </td>`;
       }
 
     });
@@ -734,10 +671,7 @@ function renderTable(id,g){
     h += `</tr>`;
   });
 
-  h += `
-    </tbody>
-  </table>
-  `;
+  h += `</tbody> </table>`;
 
   el.innerHTML = h;
 
@@ -792,8 +726,7 @@ function initColumnResize(tableId){
       parseInt(
         window
         .getComputedStyle(th)
-        .width,
-        10
+        .width, 10
       );
 
     document.body.style.cursor =
@@ -909,12 +842,12 @@ function atualizarStatusEmpregados(g){
     const cells = r.c || [];
 
     const empregado =
-    String(cells[3]?.f ?? cells[3]?.v ?? "")
+    String(cells[4]?.f ?? cells[4]?.v ?? "")
     .toUpperCase()
     .trim();
 
     const situacao =
-    String(cells[6]?.f ?? cells[6]?.v ?? "")
+    String(cells[7]?.f ?? cells[7]?.v ?? "")
     .toLowerCase()
     .trim();
 
