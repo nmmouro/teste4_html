@@ -842,12 +842,12 @@ function atualizarStatusEmpregados(g){
     const cells = r.c || [];
 
     const empregado =
-      String(cells[3]?.f ?? cells[3]?.v ?? "")
+      String(cells[4]?.f ?? cells[4]?.v ?? "")
       .toUpperCase()
       .trim();
 
     const situacao =
-      String(cells[6]?.f ?? cells[6]?.v ?? "")
+      String(cells[7]?.f ?? cells[7]?.v ?? "")
       .toLowerCase()
       .trim();
 
