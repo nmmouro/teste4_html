@@ -180,7 +180,7 @@ main{
   border-bottom:1px solid rgba(255,255,255,.08);
 }
 
-/* ================= TABLE ================= */
+/* ================= TABLE =================
 
   table{
   width:100%;
@@ -189,7 +189,23 @@ main{
   border-collapse:collapse;
 
   table-layout:fixed;
+} */
+
+
+table{
+  width:max-content;
+
+  min-width:100%;
+
+  border-collapse:collapse;
+
+  table-layout:auto;
+
+  font-size:14px;
 }
+
+
+  
 
 th{
   position:relative;
@@ -200,19 +216,20 @@ th{
 
 
 .resizer{
+
   position:absolute;
 
   top:0;
+
   right:-4px;
 
   width:10px;
+
   height:100%;
 
   cursor:col-resize;
 
-  z-index:10;
-
-  user-select:none;
+  z-index:100;
 
   background:transparent;
 }
@@ -593,7 +610,6 @@ function generateCleanHash(results){
 
 /* ================= RENDER ================= */
 
-
 function renderTable(id,g){
 
   const el = document.getElementById(id);
@@ -737,6 +753,9 @@ function renderTable(id,g){
   initColumnResize(id);
 }
 
+
+  
+
 /* ================= RESIZE ================= */
 
 function initColumnResize(tableId){
@@ -751,68 +770,30 @@ function initColumnResize(tableId){
   const cols =
     table.querySelectorAll("col");
 
-  const headers =
-    table.querySelectorAll("th");
-
   const resizers =
     table.querySelectorAll(".resizer");
 
-  resizers.forEach(resizer=>{
+  resizers.forEach((resizer,index)=>{
 
-    resizer.addEventListener(
-      "mousedown",
-      startResize
-    );
+    let startX = 0;
 
-  });
-
-  function startResize(e){
-
-    e.preventDefault();
-
-    const index =
-      Number(
-        e.target.dataset.index
-      );
-
-    const col = cols[index];
-
-    const th = headers[index];
-
-    const startX = e.pageX;
-
-    const startWidth =
-      parseInt(
-        window
-        .getComputedStyle(th)
-        .width,
-        10
-      );
-
-    document.body.style.cursor =
-      "col-resize";
+    let startWidth = 0;
 
     function onMouseMove(e){
 
-      const width =
-        startWidth +
-        (e.pageX - startX);
+      const newWidth =
+        Math.max(
+          60,
+          startWidth + (
+            e.pageX - startX
+          )
+        );
 
-      if(width < 50) return;
+      cols[index].style.width =
+        newWidth + "px";
 
-      /* altera TH */
-      th.style.width =
-        width + "px";
-
-      th.style.minWidth =
-        width + "px";
-
-      th.style.maxWidth =
-        width + "px";
-
-      /* altera COL */
-      col.style.width =
-        width + "px";
+      table.style.width =
+        "max-content";
     }
 
     function onMouseUp(){
@@ -827,32 +808,47 @@ function initColumnResize(tableId){
         onMouseUp
       );
 
-      document.body.style.cursor =
-        "default";
-
       saveWidths();
     }
 
-    document.addEventListener(
-      "mousemove",
-      onMouseMove
-    );
+    resizer.addEventListener(
+      "mousedown",
+      e=>{
 
-    document.addEventListener(
-      "mouseup",
-      onMouseUp
+        e.preventDefault();
+
+        startX = e.pageX;
+
+        startWidth =
+          parseInt(
+            window.getComputedStyle(
+              cols[index]
+            ).width,
+            10
+          );
+
+        document.addEventListener(
+          "mousemove",
+          onMouseMove
+        );
+
+        document.addEventListener(
+          "mouseup",
+          onMouseUp
+        );
+      }
     );
-  }
+  });
 
   function saveWidths(){
 
     const widths = [];
 
-    headers.forEach(th=>{
+    cols.forEach(col=>{
 
       widths.push(
         window
-        .getComputedStyle(th)
+        .getComputedStyle(col)
         .width
       );
 
@@ -864,6 +860,7 @@ function initColumnResize(tableId){
     );
   }
 }
+
 /* ================= FETCH ================= */
 
 async function fetchSheet(tab){
