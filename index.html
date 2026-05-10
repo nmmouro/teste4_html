@@ -842,7 +842,7 @@ function atualizarStatusEmpregados(g){
     const cells = r.c || [];
 
     const empregado =
-      String(cells[4]?.f ?? cells[4]?.v ?? "")
+      String(cells[3]?.f ?? cells[3]?.v ?? "")
       .toUpperCase()
       .trim();
 
@@ -865,6 +865,7 @@ function atualizarStatusEmpregados(g){
       situacao.includes("concluido") ||
       situacao.includes("cancelado") ||
       situacao.includes("finalizado");
+     situacao.includes("⏳");
 
     if(nomes.includes(empregado)){
 
