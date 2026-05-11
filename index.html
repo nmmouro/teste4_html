@@ -328,7 +328,7 @@ td.status-icon{
 
   
     <button
-      id="toggle-audio"
+     <div id="toggle-audio"></div>
       onclick="toggleAudio()"
     >
       🔊 SOM: ON
@@ -336,7 +336,7 @@ td.status-icon{
   </div>
 
     <button
-      id="install-app"
+     <div id="install-app"></div>
       style="display:none;"
     >
       📲 INSTALAR APP
@@ -396,34 +396,11 @@ const TABS = [
 
 const TABLE_HEADERS = {
 
-  painel:[
-    "Data",
-    "Hora",
-    "Veículo",
-    "Empregado",
-    "Passageiro/Motivo",
-    "Itinerário",
-    "Status"
-  ],
+  painel:["Data", "Hora", "Veículo", "Empregado", "Passageiro/Motivo", "Itinerário", "Status"],
 
-  agenda:[
-    "Data",
-    "Hora",
-    "Passageiro",
-    "Setor",
-    "Motivo",
-    "Itinerário",
-    "Status"
-  ],
+  agenda:["Data", "Hora", "Passageiro", "Setor", "Motivo", "Itinerário", "Status"],
 
-  social:[
-    "Data",
-    "Período",
-    "Passageiro",
-    "Motivo",
-    "Itinerário",
-    "Status"
-  ]
+  social:["Data", "Período", "Passageiro", "Motivo", "Itinerário", "Status"]
 };
 
 /* ================= COLUMN WIDTHS ================= */
