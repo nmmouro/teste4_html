@@ -308,20 +308,48 @@ td.status-icon{
 </audio>
 
 <header>
-  <img src="logo.png" class="logo" onerror="this.style.display='none'">
+
+  <img
+    src="logo.png"
+    class="logo"
+    onerror="this.style.display='none'"
+  >
 
   <div class="center">
-    <div class="title">MOVIMENTAÇÃO DIÁRIA</div>
+
+    <div class="title">
+      MOVIMENTAÇÃO DIÁRIA
+    </div>
+
     <div id="status-empregados"></div>
+
   </div>
 
   <div class="right">
+
     <div class="clock" id="clock"></div>
-    <button id="toggle-audio" onclick="toggleAudio()">🔊 SOM: ON</button>
+
+    <button
+      id="toggle-audio"
+      onclick="toggleAudio()"
+    >
+      🔊 SOM: ON
+    </button>
+
+    <button
+      id="install-app"
+      style="display:none;"
+    >
+      📲 INSTALAR APP
+    </button>
+
+    <button onclick="toggleFullscreen()">
+      ⛶ TELA CHEIA
+    </button>
+
   </div>
 
 </header>
-
 <main>
 
   <section class="card">
