@@ -314,7 +314,6 @@ td.status-icon{
     class="logo"
     onerror="this.style.display='none'"
   >
-  </div>
 
   <div class="center">
 
@@ -326,19 +325,20 @@ td.status-icon{
 
   </div>
 
-  
+  <div class="right">
+
+    <div class="clock" id="clock"></div>
+
     <button
-     <div id="toggle-audio"></div>
+      id="toggle-audio"
       onclick="toggleAudio()"
     >
       🔊 SOM: ON
     </button>
-  </div>
 
-  <div class="linha-botoes">
     <button
-    id="install-app"></div>
-    style="display:none;"
+      id="install-app"
+      style="display:none;"
     >
       📲 INSTALAR APP
     </button>
@@ -346,12 +346,6 @@ td.status-icon{
     <button onclick="toggleFullscreen()">
       ⛶ TELA CHEIA
     </button>
-
-  </div>
- 
-  <div class="right">
-
-    <div class="clock" id="clock"></div>
 
   </div>
 
