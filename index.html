@@ -17,7 +17,7 @@
 
 <style>
 
-/* ================= ROOT ================= */
+/* ================= CSS ================= */
 
 :root{
   --bg:#071029;
@@ -31,7 +31,7 @@
   --accent:#6ea8ff;
 }
 
-/* ================= BASE ================= */
+/* ================= BASE (fonte, margens, fundo e altura da tela================= */
 
 *{
   box-sizing:border-box;
@@ -50,7 +50,7 @@ html,body{
 
 header{
   display:grid;
-  grid-template-columns:auto auto auto;
+  grid-template-columns:auto 1fr auto;
   align-items:center;
   gap:20px;
 
@@ -66,7 +66,8 @@ header{
   max-height:90px;
   object-fit:contain;
 }
-
+  
+/* ================= Centraliza o título e o status ================= */
 .center{
   display:flex;
   flex-direction:column;
@@ -140,7 +141,7 @@ button:hover{
   color:#ff4d4d;
 }
 
-/* ================= MAIN ================= */
+/* ================= MAIN (área principal do sistema) ================= */
 
 main{
   padding:12px;
@@ -590,50 +591,29 @@ function renderTable(id,g){
       )
     ) || COLUMN_WIDTHS[id];
 
-  let h = `
-  <table id="table-${id}">
-    <colgroup>
-  `;
+  let h = `<table id="table-${id}"> <colgroup> `;
 
   savedWidths.forEach(w=>{
 
-    h += `
-      <col style="width:${w}">
-    `;
+    h += `<col style="width:${w}"> `;
 
   });
 
-  h += `
-    </colgroup>
-    <thead>
-      <tr>
+  h += ` </colgroup> <thead> <tr>
   `;
 
   headers.forEach((col,index)=>{
 
-    h += `
-      <th>
-        ${col}
-        <div
-          class="resizer"
-          data-index="${index}">
-        </div>
-      </th>
-    `;
+    h += ` <th> ${col} <div class="resizer" data-index="${index}"> </div> </th> `;
   });
 
-  h += `
-      </tr>
-    </thead>
-    <tbody>
-  `;
+  h += ` </tr> </thead> <tbody> `;
 
   rows.forEach(r=>{
 
     const cells = r.c || [];
 
-    const valores = cells.map(
-      c => (c?.f ?? c?.v ?? "")
+    const valores = cells.map( c => (c?.f ?? c?.v ?? "")
       .toString()
       .trim()
     );
@@ -681,19 +661,12 @@ function renderTable(id,g){
           icon = "⏳";
         }
 
-        h += `
-          <td class="status-icon">
-            ${icon}
-          </td>
-        `;
+        h += ` <td class="status-icon"> ${icon} </td> `;
 
-      }else{
+      }
+      else{
 
-        h += `
-          <td>
-            ${escapeHtml(formatCell(c))}
-          </td>
-        `;
+        h += ` <td>  ${escapeHtml(formatCell(c))} </td> `;
       }
 
     });
@@ -701,10 +674,7 @@ function renderTable(id,g){
     h += `</tr>`;
   });
 
-  h += `
-    </tbody>
-  </table>
-  `;
+  h += ` </tbody> </table> `;
 
   el.innerHTML = h;
 
@@ -739,61 +709,34 @@ function initColumnResize(tableId){
 
     function onMouseMove(e){
 
-      const newWidth =
-        Math.max(
-          60,
-          startWidth + (
-            e.pageX - startX
-          )
+      const newWidth =  Math.max( 60,  startWidth + ( e.pageX - startX )
         );
 
-      cols[index].style.width =
-        newWidth + "px";
+      cols[index].style.width =  newWidth + "px";
 
-      table.style.width =
-        "max-content";
+      table.style.width =  "max-content";
     }
 
     function onMouseUp(){
 
-      document.removeEventListener(
-        "mousemove",
-        onMouseMove
-      );
+      document.removeEventListener( "mousemove",  onMouseMove );
 
-      document.removeEventListener(
-        "mouseup",
-        onMouseUp
-      );
+      document.removeEventListener( "mouseup", onMouseUp );
 
       saveWidths();
     }
 
-    resizer.addEventListener(
-      "mousedown",
-      e=>{
+    resizer.addEventListener( "mousedown", e=>{
 
         e.preventDefault();
 
         startX = e.pageX;
 
-        startWidth =
-          parseInt(
-            window.getComputedStyle(
-              cols[index]
-            ).width,
-            10
-          );
+        startWidth =  parseInt( window.getComputedStyle( cols[index] ).width, 10 );
 
-        document.addEventListener(
-          "mousemove",
-          onMouseMove
-        );
+        document.addEventListener( "mousemove", onMouseMove );
 
-        document.addEventListener(
-          "mouseup",
-          onMouseUp
-        );
+        document.addEventListener( "mouseup",  onMouseUp );
       }
     );
   });
@@ -804,17 +747,11 @@ function initColumnResize(tableId){
 
     cols.forEach(col=>{
 
-      widths.push(
-        window
-        .getComputedStyle(col)
-        .width
-      );
+      widths.push( window .getComputedStyle(col) .width );
 
     });
 
-    localStorage.setItem(
-      "widths_" + tableId,
-      JSON.stringify(widths)
+    localStorage.setItem( "widths_" + tableId, JSON.stringify(widths)
     );
   }
 }
