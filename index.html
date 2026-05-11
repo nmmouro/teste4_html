@@ -50,7 +50,7 @@ html,body{
 
 header{
   display:grid;
-  grid-template-columns:auto auto auto auto;
+  grid-template-columns:auto auto auto;
   align-items:center;
   gap:20px;
 
@@ -309,17 +309,11 @@ td.status-icon{
 
 <header>
 
-  <img
-    src="logo.png"
-    class="logo"
-    onerror="this.style.display='none'"
-  >
+  <img src="logo.png" class="logo" onerror="this.style.display='none'">
 
   <div class="center">
 
-    <div class="title">
-      MOVIMENTAÇÃO DIÁRIA
-    </div>
+    <div class="title"> MOVIMENTAÇÃO DIÁRIA </div>
 
     <div id="status-empregados"></div>
 
@@ -329,23 +323,11 @@ td.status-icon{
 
     <div class="clock" id="clock"></div>
 
-    <button
-      id="toggle-audio"
-      onclick="toggleAudio()"
-    >
-      🔊 SOM: ON
-    </button>
+    <button id="toggle-audio" onclick="toggleAudio()"> 🔊 SOM: ON </button>
 
-    <button
-      id="install-app"
-      style="display:none;"
-    >
-      📲 INSTALAR APP
-    </button>
+    <button id="install-app" style="display:none;"> 📲 INSTALAR APP </button>
 
-    <button onclick="toggleFullscreen()">
-      ⛶ TELA CHEIA
-    </button>
+    <button onclick="toggleFullscreen()"> ⛶ TELA CHEIA </button>
 
   </div>
 
