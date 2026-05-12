@@ -82,6 +82,18 @@ header{
   flex-wrap:wrap;
 }
 
+  .buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buttons button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .title{
   font-size:30px;
   font-weight:700;
@@ -121,16 +133,7 @@ header{
 
 /* ================= BUTTONS ================= */
 
-button{
-  background:#0b1a3a;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.15);
-  padding:8px 14px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:700;
-  transition:.2s;
-}
+
 
 button:hover{
   background:#163067;
@@ -309,19 +312,27 @@ td.status-icon{
 
     <div id="status-empregados"></div>
 
-  </div>
-
   <div class="right">
 
-    <div class="clock" id="clock"></div>
+  <!-- Relógio -->
+  <div class="clock" id="clock"></div>
 
-    <button id="toggle-audio" onclick="toggleAudio()"> 🔊 SOM: ON </button>
+  <!-- Botões -->
+  <div class="buttons">
+    <button id="toggle-audio" onclick="toggleAudio()">
+      🔊 SOM: ON
+    </button>
 
-    <button id="install-app" style="display:none;"> 📲 INSTALAR APP </button>
+    <button id="install-app" style="display:none;">
+      📲 INSTALAR APP
+    </button>
 
-    <button onclick="toggleFullscreen()"> ⛶ TELA CHEIA </button>
-
+    <button onclick="toggleFullscreen()">
+      ⛶ TELA CHEIA
+    </button>
   </div>
+
+</div>
 
 </header>
 <main>
