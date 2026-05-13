@@ -15,9 +15,9 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#071029">
 
-<style>
+  
 
-/* ================= CSS ================= */
+<style>  /* ================= CSS ================= */
 
 :root{
   --bg:#071029;
@@ -44,12 +44,13 @@ html,body{
   background:var(--bg);
   color:var(--text);
   font-family:Inter,Arial;
-  overflow:hidden;
+  overflow:auto;
 }
+  
 
 /* ================= HEADER ================= */
 
-header{
+header{  
   display:grid;
   grid-template-columns:auto 1fr auto;
   align-items:center;
@@ -68,7 +69,7 @@ header{
   object-fit:contain;
 }
   
-/* ================= Centraliza o título e o status ================= */
+/* Centraliza o título e o status */
 .center{
   display:flex;
   flex-direction:column;
@@ -107,7 +108,7 @@ header{
   color:var(--muted);
 }
 
-/* ================= STATUS ================= */
+/* STATUS */
 
 #status-empregados{
   margin-top:8px;
@@ -132,7 +133,7 @@ header{
   color:#00ff9c;
 }
 
-/* ================= BUTTONS ================= */
+/* BUTTONS */
 
 
 
@@ -145,7 +146,7 @@ button:hover{
   color:#ff4d4d;
 }
 
-/* ================= MAIN (área principal do sistema) ================= */
+/* MAIN (área principal do sistema) */
 
 main{
   padding:12px;
@@ -156,7 +157,7 @@ main{
   text-align:center;
 }
 
-/* ================= CARDS ================= */
+/* CARDS */
 
 .card{
   background:rgba(11,26,58,.94);
@@ -185,7 +186,7 @@ main{
   border-bottom:2px solid rgba(255,255,255,.08);
 }
 
-/* ================= TABLE ================= */
+/* TABLE */
 
 
 table{
@@ -235,7 +236,7 @@ th{
 }
 
 
-/* ================= STATUS COLORS ================= */
+/* STATUS COLORS */
 
 tr.status-atendido td{
   background:rgba(0,255,156,.12) !important;
@@ -295,13 +296,18 @@ td.status-icon{
 }
 
 </style>
+  
 </head>
+  
+/* ================================================================================*/
 
-<body>
+<body> 
+  
 
 <audio id="beep" preload="auto">
   <source src="alerta.mp3" type="audio/mpeg">
 </audio>
+  
 
 <header>
 
@@ -335,9 +341,9 @@ td.status-icon{
     </button>
   </div>
 
-
-
 </header>
+  
+  
 <main>
 
   <section class="card">
@@ -360,6 +366,8 @@ td.status-icon{
 <div class="small">
   Atualização automática a cada 30 segundos • Google Sheets
 </div>
+
+  
 
 <script>
 
@@ -941,6 +949,7 @@ if("serviceWorker" in navigator){
 }
 
 </script>
+  
 
 </body>
 </html>
