@@ -20,17 +20,17 @@
 <style>  /* ================= CSS ================= */
 
 :root{
-  --bg:#071029;
-  --card:#0b1a3a;
-  --table:#0e224d;
-  --table-alt:#0c1d40;
-  --header:#2c4078;
-  --border:#1e2f5c;
+  --bg:#071029;        /* fundo geral */
+  --card:#0b1a3a;      /* cards */
+  --table:#0e224d;     /* fundo da tabela */
+  --table-alt:#0c1d40; /* zebra */
+  --header:#2c4078;    /* cabeçalho */
+  --border:#1e2f5c;    /* bordas suaves */
   --text:#f7f9fa;
   --muted:#9fb3ff;
   --accent:#f7f8fa;
- 
 }
+
 
 /* ================= BASE (fonte, margens, fundo e altura da tela================= */
 
@@ -39,33 +39,37 @@
 }
 
 html,body{
-  margin:0;
   height:100%;
+  margin:0;
+  padding:0;
   background:var(--bg);
   color:var(--text);
-  font-family:Inter,Arial;
-  overflow:auto;
+  font-family:Inter,Arial,sans-serif;
+  overflow:hidden;
 }
   
 
 /* ================= HEADER ================= */
 
-header{  
+header{
   display:grid;
-  grid-template-columns:auto 1fr auto;
+  grid-template-columns:
+    180px
+    1fr
+    260px;
+
   align-items:center;
-  gap:20px;
-
-  padding:14px 20px;
-
-  background:#08142d;
-
+  gap:16px;
+  padding:12px 20px;
+  background:#020617;
+  border-radius:10px;
+  border:1px solid #ffffff;
   border-bottom:2px solid rgba(255,255,255,.08);
 }
 
 .logo{
-  width:300px;
-  max-height:150px;
+  height:65px;
+  max-width:100%;
   object-fit:contain;
 }
   
@@ -75,6 +79,7 @@ header{
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  text-align:center;
 }
 
 /* lado direito */
@@ -129,7 +134,7 @@ header{
 }
 
 .ocupado{
-  background:rgba(255,77,77,.15);
+  background:rgba(255,77,0,.15);
   color:#ff4d4d;
 }
 
